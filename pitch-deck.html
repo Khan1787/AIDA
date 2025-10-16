@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDA - Pitch Deck Investitori</title>
+    <!-- Chosen Palette: White & Black Premium -->
+    <!-- Application Structure Plan: A full-screen, slide-based presentation controlled by linear navigation (Next/Prev buttons & keyboard arrows). This structure is chosen to create a compelling, controlled narrative essential for an investor pitch. The flow guides the audience logically from the core problem to the investment opportunity, covering: 1. Title, 2. Problem, 3. Solution, 4. Market Opportunity (with chart), 5. Product, 6. Technology Advantage, 7. Business Model, 8. Go-to-Market & Roadmap, 9. Team, 10. Financial Projections (with chart), 11. The Ask. This is the standard, most effective format for investor communication. -->
+    <!-- Visualization & Content Choices: Report Info -> Key metrics on market, finance, and operations. Goal -> Create a clear, persuasive business case. Viz/Presentation Method -> Large text for KPIs, HTML/CSS for diagrams (roadmap), and Chart.js (Canvas) for Market Size and Financial Projections. Interaction -> Simple slide navigation to maintain focus on the story. Justification -> This approach avoids overwhelming users with complex interactions, ensuring the key investment message is delivered clearly and professionally. Library/Method -> Chart.js for canvas-based charts, TailwindCSS for layout, Font Awesome for icons. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .slide {
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .slide-content { max-width: 1000px; width: 100%;}
+        .stat-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        h2 { font-weight: 800; font-size: 2.5rem; line-height: 1.2; letter-spacing: -0.025em; color: #111827; }
+        @media (min-width: 768px) { h2 { font-size: 3rem; } }
+        .chart-container { position: relative; width: 100%; height: 300px; max-height: 350px; max-width: 600px; margin: 2rem auto 0 auto; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <main>
+        <!-- Slide 1: Title -->
+        <section class="slide active">
+            <div class="slide-content">
+                <span class="text-xl font-semibold text-black">AIDA</span>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-black mt-4 mb-6">Revoluționăm Administrația Medicală în România</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Un asistent medical AI 24/7 care automatizează recepția, optimizează programările și crește exponențial eficiența cabinetelor medicale.</p>
+                <p class="text-sm text-gray-500 mt-12">Octombrie 2025</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Problema -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">Sectorul Medical Privat este copleșit de Ineficiență</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="stat-card">
+                        <p class="text-5xl font-extrabold text-black">80%</p>
+                        <p class="mt-2 text-gray-600">Din timpul asistentelor este irosit pe sarcini administrative repetitive (apeluri, programări).</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-5xl font-extrabold text-black">30%</p>
+                        <p class="mt-2 text-gray-600">Dintre apeluri rămân fără răspuns din cauza liniilor ocupate, ducând la pierderea pacienților.</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-5xl font-extrabold text-black">>€150M</p>
+                        <p class="mt-2 text-gray-600">Sunt pierderi anuale în România din cauza programărilor ratate ('no-shows') și a ineficienței operaționale.</p>
+                    </div>
+                </div>
+                <p class="mt-12 text-lg font-semibold text-black">Rezultatul: Costuri ridicate, personal epuizat și pacienți frustrați.</p>
+            </div>
+        </section>
+
+        <!-- Slide 3: Soluția -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">AIDA: Sistemul de Operare pentru Recepția Medicală Modernă</h2>
+                 <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-12">AIDA este o soluție SaaS B2B care eliberează personalul medical de sarcinile administrative, permițându-le să se concentreze pe ceea ce contează cu adevărat: îngrijirea pacienților.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                    <div class="stat-card p-6">
+                        <i class="fa-solid fa-gears text-3xl text-black mb-4"></i>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">Eficiență Fără Precedent</h3>
+                        <p class="text-gray-600">Automatizează complet programările, memento-urile și răspunsurile la întrebări frecvente prin Voce și WhatsApp.</p>
+                    </div>
+                    <div class="stat-card p-6">
+                        <i class="fa-solid fa-arrow-down-wide-short text-3xl text-black mb-4"></i>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">Optimizarea Costurilor</h3>
+                        <p class="text-gray-600">Reduce costurile operaționale cu până la 60% comparativ cu un recepționer uman, operând 24/7 fără erori.</p>
+                    </div>
+                    <div class="stat-card p-6">
+                        <i class="fa-solid fa-arrow-trend-up text-3xl text-black mb-4"></i>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">Creșterea Veniturilor</h3>
+                        <p class="text-gray-600">Scade rata de 'no-show' cu peste 75% prin memento-uri automate și crește gradul de ocupare a sloturilor.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 4: Oportunitatea de Piață -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-4">O Piață Vastă, Insuficient Digitalizată</h2>
+                <p class="text-lg text-gray-600 mb-8">Ne adresăm pieței de servicii medicale private din România, un sector în valoare de €2.5 Miliarde, pregătit pentru digitalizare.</p>
+                <div class="chart-container">
+                    <canvas id="marketChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Produsul -->
+        <section class="slide">
+            <div class="slide-content">
+                 <h2 class="mb-12">Platforma AIDA în Acțiune</h2>
+                 <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">Un ecosistem complet integrat care gestionează inteligent interacțiunile cu pacienții.</p>
+                 <div class="bg-white rounded-xl shadow-lg p-6 text-left font-mono text-sm overflow-hidden">
+                     <div class="flex items-center pb-2 mb-2 border-b border-gray-200">
+                         <div class="w-3 h-3 bg-red-500 rounded-full mr-1.5"></div>
+                         <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1.5"></div>
+                         <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                         <span class="ml-auto text-gray-500 font-sans font-semibold">Jurnal de Activitate AIDA</span>
+                     </div>
+                     <div class="divide-y divide-gray-100">
+                        <div class="py-3 flex justify-between items-center"><div><span class="font-bold text-green-600">[Programare]</span> Pacient: M. Ionescu | Canal: Voce | Acțiune: Programare confirmată Dr. Popescu, 18 Oct, 14:00.</div><span class="text-gray-500">Azi, 09:01</span></div>
+                        <div class="py-3 flex justify-between items-center"><div><span class="font-bold text-red-600">[Urgență]</span> Pacient: I. Călinescu | Canal: Voce | Acțiune: Detectat "dureri în piept". Apel redirecționat instant către operator uman.</div><span class="text-gray-500">Azi, 09:35</span></div>
+                        <div class="py-3 flex justify-between items-center"><div><span class="font-bold text-blue-600">[Info]</span> Pacient: E. Vasilescu | Canal: WhatsApp | Acțiune: Răspuns automat furnizat (program, adresă). Solicitare închisă.</div><span class="text-gray-500">Ieri, 10:05</span></div>
+                        <div class="py-3 flex justify-between items-center"><div><span class="font-bold text-yellow-600">[Anulare]</span> Pacient: A. Popescu | Canal: WhatsApp | Acțiune: Anulare confirmată. Slot eliberat automat în calendar.</div><span class="text-gray-500">Ieri, 18:45</span></div>
+                     </div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Tehnologia -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">Avantajul Tehnologic Competitiv</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="stat-card text-left p-8">
+                        <i class="fa-solid fa-brain text-4xl text-black mb-4"></i>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">Model AI Specializat</h3>
+                        <p class="text-gray-600">Utilizăm un model lingvistic de ultimă generație (bazat pe arhitectura Med-PaLM) pe care l-am antrenat intensiv (fine-tuning) pe mii de conversații medicale în limba română.</p>
+                    </div>
+                    <div class="stat-card text-left p-8">
+                        <i class="fa-solid fa-sitemap text-4xl text-black mb-4"></i>
+                        <h3 class="font-bold text-xl text-gray-900 mb-2">Integrare Flexibilă</h3>
+                        <p class="text-gray-600">AIDA se integrează nativ cu liniile telefonice (VoIP) și WhatsApp Business, și dispune de un API robust pentru conectarea la sistemele EMR/EHR existente (HL7/FHIR).</p>
+                    </div>
+                </div>
+                <p class="mt-12 text-lg text-gray-600">Acest lucru ne permite să oferim o acuratețe de peste 98% în înțelegerea intenției pacienților, un factor de diferențiere clar față de soluțiile generice.</p>
+            </div>
+        </section>
+        
+        <!-- Slide 7: Modelul de Afaceri -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">Un Model de Afaceri SaaS Scalabil și Predictibil</h2>
+                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="stat-card p-8">
+                        <h3 class="font-bold text-2xl text-gray-900 mb-4">Abonamente Lunare</h3>
+                        <p class="text-gray-600 mb-6">Venituri recurente (MRR) bazate pe numărul de medici/locații.</p>
+                        <div class="space-y-2 text-left">
+                           <p><span class="font-semibold text-black">Basic:</span> €199 / lună</p>
+                           <p><span class="font-semibold text-black">Professional:</span> €299 / lună</p>
+                           <p><span class="font-semibold text-black">Enterprise:</span> Preț personalizat</p>
+                        </div>
+                    </div>
+                    <div class="stat-card p-8">
+                        <h3 class="font-bold text-2xl text-gray-900 mb-4">Taxă de Implementare</h3>
+                        <p class="text-gray-600">O taxă unică pentru setup, training și integrare, asigurând un cash flow inițial pozitiv per client.</p>
+                        <p class="text-4xl font-extrabold text-black mt-6">€500+</p>
+                    </div>
+                     <div class="stat-card p-8">
+                        <h3 class="font-bold text-2xl text-gray-900 mb-4">Metrici Cheie Atractive</h3>
+                        <p class="text-gray-600">Un model financiar sănătos, optimizat pentru creștere.</p>
+                         <div class="space-y-2 text-left mt-6">
+                           <p><span class="font-semibold text-black">LTV:CAC Ratio:</span> > 4:1</p>
+                           <p><span class="font-semibold text-black">Gross Margin:</span> ~80%</p>
+                           <p><span class="font-semibold text-black">Churn Rate Anual:</span> < 5%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Go-to-Market & Roadmap -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">Strategia Noastră de Creștere și Viziunea de Viitor</h2>
+                <div class="relative w-full mt-4 p-4 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-gray-200 before:content-[''] before:translate-x-0">
+                    <div class="relative pl-8 pr-4 py-2 bg-white rounded-xl shadow-md">
+                        <div class="absolute -left-2 top-1 w-5 h-5 bg-black rounded-full border-4 border-white"></div>
+                        <h4 class="font-bold text-lg text-black">Q4 2025 - Lansare MVP</h4>
+                        <p class="text-gray-600 text-left">Onboarding-ul a 20 de cabinete medicale partenere în București și Cluj pentru validarea finală a produsului și a strategiei de preț.</p>
+                    </div>
+                    <div class="relative pl-8 pr-4 py-4 mt-8 bg-white rounded-xl shadow-md">
+                        <div class="absolute -left-2 top-1 w-5 h-5 bg-black rounded-full border-4 border-white"></div>
+                        <h4 class="font-bold text-lg text-black">2026 - Expansiune Națională</h4>
+                        <p class="text-gray-600 text-left">Scalare la 200 de cabinete prin marketing digital și parteneriate strategice. Obținerea unui ARR de €500k.</p>
+                    </div>
+                    <div class="relative pl-8 pr-4 py-4 mt-8 bg-white rounded-xl shadow-md">
+                        <div class="absolute -left-2 top-1 w-5 h-5 bg-black rounded-full border-4 border-white"></div>
+                        <h4 class="font-bold text-lg text-black">2027 - Lider de Piață & Dezvoltare Produs</h4>
+                        <p class="text-gray-600 text-left">Atingerea a 800+ de clienți. Introducerea de module noi (ex. triaj medical primar bazat pe AI, managementul rețetelor) și pregătirea pentru expansiune regională (CEE).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Echipa -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">Echipa din Spatele Inovației</h2>
+                <div class="inline-block">
+                    <div class="stat-card p-8">
+                        <img src="https://placehold.co/128x128/111827/ffffff?text=AG" alt="Andrei Galea" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-white shadow-md">
+                        <h3 class="text-2xl font-bold text-gray-900">Andrei Galea</h3>
+                        <p class="text-gray-600 font-semibold">Fondator & CEO</p>
+                        <p class="max-w-md mx-auto mt-4 text-gray-600">Cu o experiență de 4 ani în software development și 2 ani specializați în aplicarea AI, Andrei are viziunea tehnică și de business pentru a transforma AIDA în liderul pieței de health-tech din România.</p>
+                    </div>
+                </div>
+                 <p class="mt-12 text-lg text-gray-600">Căutăm activ un co-fondator cu expertiză în vânzări B2B în domeniul medical și un consiliu de advisor-i format din medici și manageri de clinici.</p>
+            </div>
+        </section>
+
+        <!-- Slide 10: Proiecții Financiare -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-4">Proiecții Financiare pe 3 Ani</h2>
+                <p class="text-lg text-gray-600 mb-8">Estimăm o creștere exponențială a veniturilor anuale recurente (ARR) și atingerea pragului de rentabilitate în 18 luni.</p>
+                <div class="chart-container">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: The Ask -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="mb-12">Căutăm o Investiție Pre-Seed de €150.000</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-12">Această rundă ne va permite să accelerăm dezvoltarea produsului, să extindem echipa de vânzări și să dominăm piața din România în următorii 2 ani.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="stat-card p-6">
+                        <h3 class="font-bold text-xl text-black mb-2">40% Dezvoltare Produs</h3>
+                        <p class="text-gray-600">Finalizarea integrărilor EMR și dezvoltarea de noi module AI.</p>
+                    </div>
+                    <div class="stat-card p-6">
+                        <h3 class="font-bold text-xl text-black mb-2">40% Vânzări & Marketing</h3>
+                        <p class="text-gray-600">Construirea echipei de vânzări și implementarea campaniilor de marketing digital.</p>
+                    </div>
+                    <div class="stat-card p-6">
+                        <h3 class="font-bold text-xl text-black mb-2">20% Operațional</h3>
+                        <p class="text-gray-600">Costuri de infrastructură, administrative și recrutare.</p>
+                    </div>
+                </div>
+                <div class="mt-16">
+                     <h3 class="text-3xl font-bold text-black">Alăturați-vă nouă în misiunea de a digitaliza sănătatea.</h3>
+                     <p class="mt-4 text-xl text-gray-700">Andrei Galea | galea.andrei@aida-medical.ro</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Navigation Buttons -->
+    <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        <span id="slideCounter" class="text-sm font-semibold text-gray-700 bg-white/70 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md">1 / 11</span>
+        <button id="prevSlideBtn" class="bg-black text-white w-12 h-12 rounded-full shadow-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+            <i class="fas fa-arrow-left text-lg"></i>
+        </button>
+        <button id="nextSlideBtn" class="bg-black text-white w-12 h-12 rounded-full shadow-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+            <i class="fas fa-arrow-right text-lg"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            const nextBtn = document.getElementById('nextSlideBtn');
+            const prevBtn = document.getElementById('prevSlideBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            let marketChartInstance = null;
+            let financialsChartInstance = null;
+
+            function updateNavButtons() {
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
+
+            function updateCounter() {
+                slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            }
+            
+            function destroyCharts() {
+                if (marketChartInstance) {
+                    marketChartInstance.destroy();
+                    marketChartInstance = null;
+                }
+                if (financialsChartInstance) {
+                    financialsChartInstance.destroy();
+                    financialsChartInstance = null;
+                }
+            }
+
+            function createMarketChart() {
+                 if (marketChartInstance) return;
+                 const ctx = document.getElementById('marketChart').getContext('2d');
+                 marketChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Piața Totală (TAM)', 'Piața deservibilă (SAM)', 'Piața Obiectiv (SOM)'],
+                        datasets: [{
+                            label: 'Valoare Piață (Milioane €)',
+                            data: [2500, 450, 60],
+                            backgroundColor: ['rgba(17, 24, 39, 0.3)', 'rgba(17, 24, 39, 0.6)', 'rgba(17, 24, 39, 1)'],
+                            borderColor: ['rgba(17, 24, 39, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                           legend: { display: false },
+                           tooltip: {
+                                callbacks: { label: (context) => `${context.parsed.y} Milioane €` }
+                           },
+                           title: { display: true, text: 'Oportunitate de Piață în România', font: { size: 16, family: 'Inter' } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { callback: (value) => `${value}M €` } }
+                        }
+                    }
+                });
+            }
+
+            function createFinancialsChart() {
+                 if (financialsChartInstance) return;
+                 const ctx = document.getElementById('financialsChart').getContext('2d');
+                 financialsChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['2025 (Q4)', '2026', '2027', '2028'],
+                        datasets: [{
+                            label: 'Venituri Anuale Recurente (ARR)',
+                            data: [20000, 500000, 2000000, 6000000],
+                            borderColor: 'rgba(17, 24, 39, 1)',
+                            backgroundColor: 'rgba(17, 24, 39, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                           legend: { display: false },
+                           tooltip: {
+                                callbacks: { label: (context) => `ARR: ${new Intl.NumberFormat('ro-RO', { style: 'currency', currency: 'EUR' }).format(context.parsed.y)}` }
+                           },
+                           title: { display: true, text: 'Creșterea Proiectată a Veniturilor (ARR)', font: { size: 16, family: 'Inter' } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { callback: (value) => `${value / 1000000}M €` } }
+                        }
+                    }
+                });
+            }
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                });
+                
+                slides[index].classList.add('active');
+                
+                destroyCharts();
+
+                if (slides[index].contains(document.getElementById('marketChart'))) {
+                    createMarketChart();
+                }
+                if (slides[index].contains(document.getElementById('financialsChart'))) {
+                    createFinancialsChart();
+                }
+
+                updateNavButtons();
+                updateCounter();
+            }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            }
+
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+            
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>

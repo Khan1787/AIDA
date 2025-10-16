@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDA - Asistent Medical AI 24/7 pentru Cabinete</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Define the new accent color - black theme */
+        :root {
+            --color-accent: #000000; /* Black */
+            --color-accent-dark: #333333; /* Dark gray for hover */
+            --color-accent-shadow: rgba(0, 0, 0, 0.3); /* Black shadow */
+            --color-primary: #1f2937; /* Dark gray for text */
+            --color-secondary: #6b7280; /* Medium gray */
+            --color-background: #ffffff; /* Pure white */
+            --color-light-bg: #f9fafb; /* Very light gray */
+        }
+        
+        /* Custom styles for premium white theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            line-height: 1.7;
+        }
+        .hero-bg {
+            background-image: url('./AIDA hero image .svg');
+            background-size: cover;
+            background-position: center;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+            background: linear-gradient(315deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+            box-shadow: 0 4px 15px var(--color-accent-shadow), 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: perspective(1000px) rotateX(0deg);
+        }
+        .cta-button:hover {
+            transform: perspective(1000px) rotateX(-5deg) translateY(-3px);
+            box-shadow: 0 8px 25px var(--color-accent-shadow), 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            background-color: var(--color-light-bg);
+            color: var(--color-primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transform: perspective(1000px) rotateX(0deg);
+        }
+        .feature-card:hover {
+            background-color: var(--color-background);
+            transform: perspective(1000px) rotateX(-2deg) translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .icon-3d {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        .text-accent {
+            color: var(--color-accent);
+        }
+        .border-accent {
+            border-color: var(--color-accent);
+        }
+        .shadow-accent-light {
+            box-shadow: 0 10px 15px -3px var(--color-accent-shadow), 0 4px 6px -2px var(--color-accent-shadow);
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 640px) {
+            .hero-bg {
+                min-height: 70vh;
+                padding: 4rem 0;
+            }
+            .modal-content {
+                margin: 1% auto;
+                width: 98%;
+                border-radius: 8px;
+            }
+            .feature-card {
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-bg {
+                min-height: 60vh;
+                padding: 3rem 0;
+            }
+            .modal-content {
+                margin: 0.5% auto;
+                width: 99%;
+            }
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5); 
+            backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 95%; 
+            max-width: 1200px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation-name: animatetop;
+            animation-duration: 0.4s;
+            max-height: 95vh;
+            overflow: hidden;
+        }
+        .close-btn {
+            color: var(--color-secondary);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 10px 20px;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        /* Dashboard styles - premium */
+        .dashboard-container-modal {
+            padding: 20px;
+        }
+        .header-bg {
+            background-color: var(--color-light-bg);
+        }
+        .table-row-hover:hover {
+            background-color: #f3f4f6;
+            cursor: pointer;
+        }
+        .tag {
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .tag-programare { background-color: #dbeafe; color: #1e40af; }
+        .tag-mesaj { background-color: #d1fae5; color: #065f46; }
+        .tag-anulare { background-color: #fee2e2; color: #991b1b; }
+        .tag-reteta { background-color: #fef3c7; color: #b45309; }
+        .tag-urgent { background-color: #fecaca; color: #dc2626; animation: pulse-red 1.5s infinite; }
+
+        /* Animations */
+        .flip-horizontal {
+            transform: scaleX(-1);
+        }
+        @keyframes animatetop {
+            from {top:-300px; opacity:0} 
+            to {top:0; opacity:1}
+        }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navigation Bar (Premium White) -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo using SVG -->
+                <img src="./AIDA.svg" alt="AIDA Logo" class="h-12 w-auto ml-[-2rem]">
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#solutie" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Soluție</a>
+                    <a href="#beneficii" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Beneficii</a>
+                    <a href="#functionalitati" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Funcționalități</a>
+                    <a href="#contact" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Contact</a>
+                    <a href="#contact" class="px-6 py-3 text-white text-sm font-semibold rounded-full cta-button">
+                        Demo Gratuit
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-accent focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-200">
+                <div class="flex flex-col space-y-4 pt-4">
+                    <a href="#solutie" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Soluție</a>
+                    <a href="#beneficii" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Beneficii</a>
+                    <a href="#functionalitati" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Funcționalități</a>
+                    <a href="#contact" class="text-sm font-medium text-gray-600 hover:text-accent transition duration-300">Contact</a>
+                    <a href="#contact" class="px-6 py-3 text-white text-sm font-semibold rounded-full cta-button text-center">
+                        Demo Gratuit
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 1. Hero Section (Premium & Clean) -->
+    <section class="hero-bg py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+            
+            <!-- Left Side: Text Content -->
+            <div class="md:w-1/2 mb-10 md:mb-0 text-left">
+                <p class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent mb-3">
+                    Automatizare 24/7 pentru Cabinetele Medicale
+                </p>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-6 text-gray-900 relative text-left">
+                    <span class="relative inline-block px-12 py-6 bg-white bg-opacity-20 backdrop-blur-lg rounded-xl border border-white border-opacity-30 shadow-2xl text-left">
+                        
+                        <span class="text-accent">
+                            <span class="text-black">A</span><span class="text-white">rtificial </span><span class="text-black">I</span><span class="text-white">ntelligence for </span><span class="text-black">D</span><span class="text-white">octors and</span>
+                        </span><br>
+                        <span class="text-black"><span class="text-black">A</span><span class="text-white">ssistants.</span></span>
+                    </span>
+                </h1>
+                <p class="text-lg sm:text-xl text-white mb-8 max-w-lg mx-auto md:mx-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                    Preia apelurile, gestionează programările și filtrează urgențele. Eliberează-ți personalul pentru ceea ce contează cu adevărat: îngrijirea pacienților.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact" class="px-6 sm:px-8 py-3 sm:py-4 text-white font-bold text-sm sm:text-base rounded-xl shadow-accent-light cta-button">
+                        Cere o Demonstrație Acum
+                    </a>
+                    <a href="#functionalitati" class="px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-accent text-accent font-bold text-sm sm:text-base rounded-xl hover:bg-gray-50 transition duration-300 shadow-lg">
+                        Vezi Funcționalități
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Side: Visual Image -->
+            <div class="md:w-1/2">
+                
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 2. Core Features Section (Funcționalități) -->
+    <section id="functionalitati" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-extrabold mb-4 text-gray-900">
+                <span class="text-black">Puterea </span>
+                <span class="text-accent">AIDA</span>
+            </h2>
+            <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+                AIDA este mai mult decât un robot telefonic. Este o soluție completă adaptată cerințelor pieței medicale din România.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Feature 1: 24/7 Availability -->
+                <div class="feature-card p-6 rounded-xl text-left shadow-lg">
+                    <div class="text-4xl text-accent mb-4 icon-3d"><i class="fas fa-headset"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Recepție 24/7 (Voce & Text)</h3>
+                    <p class="text-gray-600">
+                        Nu ratați niciun apel sau mesaj. AIDA preia solicitările pe liniile telefonice și WhatsApp Business non-stop, inclusiv în afara orelor de program.
+                    </p>
+                </div>
+
+                <!-- Feature 2: Appointment Management -->
+                <div class="feature-card p-6 rounded-xl text-left shadow-lg">
+                    <div class="text-4xl text-black mb-4 icon-3d"><i class="fas fa-calendar-check"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Gestiune Inteligentă a Programărilor</h3>
+                    <p class="text-gray-600">
+                        Pacienții pot programa, reprograma sau anula consultații direct prin conversația cu AI. Sincronizare automată cu sistemul dumneavoastră.
+                    </p>
+                </div>
+
+                <!-- Feature 3: Automated Reminders -->
+                <div class="feature-card p-6 rounded-xl text-left shadow-lg">
+                    <div class="text-4xl text-accent mb-4 icon-3d"><i class="fas fa-bell"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Memento-uri Automate</h3>
+                    <p class="text-gray-600">
+                        Reduceți numărul de 'no-show'-uri. AIDA trimite automat memento-uri pe WhatsApp sau SMS cu detalii despre programare, crescând eficiența.
+                    </p>
+                </div>
+
+                <!-- Feature 4: Information Provider -->
+                <div class="feature-card p-6 rounded-xl text-left shadow-lg">
+                    <div class="text-4xl text-black mb-4 icon-3d"><i class="fas fa-info-circle"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Informații Instant & Precise</h3>
+                    <p class="text-gray-600">
+                        Oferă răspunsuri rapide și corecte despre servicii, tarife, programul de lucru al cabinetului și disponibilitatea medicilor.
+                    </p>
+                </div>
+
+                <!-- Feature 5: Emergency Recognition -->
+                <div class="feature-card p-6 rounded-xl text-left shadow-lg">
+                    <div class="text-4xl text-accent mb-4 icon-3d"><i class="fas fa-ambulance"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Filtrare și Redirecționare Urgențe</h3>
+                    <p class="text-gray-600">
+                        AIDA recunoaște imediat o urgență medicală în timpul conversației și o redirecționează către un operator uman sau un număr de urgență, fără întârziere.
+                    </p>
+                </div>
+
+                <!-- Feature 6: Natural Language -->
+                <div class="feature-card p-6 rounded-xl text-left shadow-lg">
+                    <div class="text-4xl text-black mb-4 icon-3d"><i class="fas fa-comments"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Voce Naturală în Limba Română</h3>
+                    <p class="text-gray-600">
+                        Folosește modele TTS și STT de ultimă generație pentru o experiență de conversație naturală și plăcută, care nu sună a robot.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- New Button for Dashboard Demo -->
+            <button onclick="document.getElementById('aidaDemoModal').style.display='block'" 
+                    class="mt-12 mx-auto px-10 py-4 text-white font-bold text-lg rounded-xl shadow-accent-light cta-button">
+                <i class="fas fa-chart-line text-white mr-2 icon-3d"></i> Vezi Jurnalul de Activitate AIDA (Demo)
+            </button>
+        </div>
+    </section>
+
+    <!-- 3. Benefits Section (Beneficii) -->
+    <section id="beneficii" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-extrabold mb-4 text-gray-900">
+                    <span class="text-black">De Ce AIDA? </span>
+                    <span class="text-accent">Beneficiile </span>
+                    Imediat-Vizibile.
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Transformă costurile operaționale în eficiență și îmbunătățește radical experiența pacienților.
+                </p>
+            </div>
+
+            <div class="space-y-12">
+                <!-- Benefit 1 -->
+                <div class="flex flex-col md:flex-row items-center bg-gray-50 p-6 md:p-10 rounded-2xl shadow-lg border border-gray-200">
+                    <div class="text-4xl sm:text-5xl text-accent mr-6 md:mr-8 mb-4 md:mb-0 min-w-[48px] md:min-w-[64px] icon-3d"><i class="fas fa-user-clock"></i></div>
+                    <div class="md:w-3/4">
+                        <h3 class="text-xl sm:text-2xl font-bold mb-2 text-gray-900">Eficiență Fără Precedent</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">
+                            Eliberează asistenții umani de 80% din sarcinile repetitive: Programări, FAQ, memento-uri. Personalul tău se poate concentra pe interacțiunea directă și pe cazurile complexe.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Benefit 2 -->
+                <div class="flex flex-col md:flex-row items-center bg-gray-50 p-6 md:p-10 rounded-2xl shadow-lg border border-gray-200">
+                    <div class="text-4xl sm:text-5xl text-black mr-6 md:mr-8 mb-4 md:mb-0 min-w-[48px] md:min-w-[64px] icon-3d"><i class="fas fa-heartbeat"></i></div>
+                    <div class="md:w-3/4">
+                        <h3 class="text-xl sm:text-2xl font-bold mb-2 text-gray-900">Creșterea Satisfacției Pacienților</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">
+                            Pacienții tăi primesc un răspuns instant, indiferent de oră. Disponibilitatea 24/7 elimină frustrarea liniilor ocupate și îmbunătățește reputația cabinetului.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="flex flex-col md:flex-row items-center bg-gray-50 p-6 md:p-10 rounded-2xl shadow-lg border border-gray-200">
+                    <div class="text-4xl sm:text-5xl text-accent mr-6 md:mr-8 mb-4 md:mb-0 min-w-[48px] md:min-w-[64px] icon-3d"><i class="fas fa-euro-sign"></i></div>
+                    <div class="md:w-3/4">
+                        <h3 class="text-xl sm:text-2xl font-bold mb-2 text-gray-900">Optimizarea Costurilor</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">
+                            Costul unui asistent AI este mult mai mic decât cel al unui angajat uman, oferind în același timp productivitate neîntreruptă și zero erori umane în procesul de programare.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Technology/Integration CTA Block -->
+    <section class="py-12 sm:py-20 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white p-6 sm:p-10 rounded-2xl text-center border-2 border-gray-200 shadow-xl shadow-gray-100">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4 text-gray-900">
+                    Se Integrează Acolo Unde Sunteți Deja
+                </h2>
+                <p class="text-lg sm:text-xl text-gray-600 mb-8 max-w-4xl mx-auto">
+                    AIDA nu necesită schimbări complicate. Ne conectăm la infrastructura existentă:
+                </p>
+                <div class="flex justify-center space-x-6 sm:space-x-8 mb-8 sm:mb-10">
+                    <div class="text-4xl sm:text-5xl text-black icon-3d"><i class="fab fa-whatsapp"></i></div>
+                    <div class="text-4xl sm:text-5xl text-accent icon-3d"><i class="fas fa-phone-alt"></i></div>
+                    <div class="text-4xl sm:text-5xl text-black icon-3d"><i class="fas fa-database"></i></div>
+                </div>
+                <p class="text-base sm:text-lg font-semibold text-gray-600 mb-6">
+                    Linii Telefonice și WhatsApp Business.
+                    AIDA vorbește Româna natural, înțelegând contextul local.
+                </p>
+                <a href="#contact" class="cta-button inline-block px-8 sm:px-10 py-3 sm:py-4 text-white font-bold text-base sm:text-lg rounded-full shadow-accent-light">
+                    Solicită o Evaluare Gratuită
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Pricing Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-extrabold mb-4 text-gray-900">
+                    Planuri și <span class="text-accent">Prețuri</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Alege planul potrivit pentru cabinetul tău medical.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Plan -->
+                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg border-2 border-gray-200 text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+                    <div class="text-4xl font-extrabold text-accent mb-2">199€<span class="text-lg font-normal">/lună</span></div>
+                    <p class="text-gray-600 mb-6">Pentru cabinete mici</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Recepție 24/7</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Gestiune programări</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Memento-uri SMS</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Suport email</li>
+                    </ul>
+                    <a href="#contact" class="cta-button inline-block px-8 py-3 text-white font-bold rounded-xl">
+                        Alege Basic
+                    </a>
+                </div>
+
+                <!-- Professional Plan -->
+                <div class="bg-gray-700 p-8 rounded-2xl shadow-2xl border-2 border-gray-700 text-center text-white relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-4 py-1 rounded-full text-sm font-bold">
+                        Recomandat
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Professional</h3>
+                    <div class="text-4xl font-extrabold mb-2">299€<span class="text-lg font-normal">/lună</span></div>
+                    <p class="mb-6 opacity-90">Pentru cabinete medii</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Tot din Basic</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> WhatsApp Business</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Filtrare urgențe</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Rapoarte detaliate</li>
+                        <li class="flex items-center"><i class="fas fa-check text-black mr-3"></i> Suport telefonic</li>
+                    </ul>
+                    <a href="#contact" class="bg-white text-gray-700 font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-gray-50 transition">
+                        Alege Professional
+                    </a>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="bg-black p-8 rounded-2xl shadow-lg text-center text-white">
+                    <h3 class="text-2xl font-bold mb-4">Enterprise</h3>
+                    <div class="text-4xl font-extrabold mb-2">Personalizat</div>
+                    <p class="mb-6 opacity-90">Pentru clinici și spitale</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center"><i class="fas fa-check mr-3"></i> Tot din Professional</li>
+                        <li class="flex items-center"><i class="fas fa-check mr-3"></i> Integrare HL7/FHIR</li>
+                        <li class="flex items-center"><i class="fas fa-check mr-3"></i> API personalizat</li>
+                        <li class="flex items-center"><i class="fas fa-check mr-3"></i> Manager dedicat</li>
+                        <li class="flex items-center"><i class="fas fa-check mr-3"></i> SLA 99.9%</li>
+                    </ul>
+                    <a href="#contact" class="bg-white text-gray-700 font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-gray-50 transition">
+                        Contactează-ne
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact" class="py-12 sm:py-20 bg-gray-50">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-4 text-gray-900">
+                Începe Transformarea Cabinetului Tău
+            </h2>
+            <p class="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-10">
+                Contactează-ne astăzi pentru a vedea AIDA în acțiune și pentru a primi o ofertă personalizată.
+            </p>
+
+            <form action="#" method="POST" class="space-y-4 sm:space-y-6 bg-white p-6 sm:p-8 rounded-xl shadow-2xl shadow-gray-300 border border-gray-200">
+                <div>
+                    <input type="text" id="nume" name="nume" placeholder="Numele Cabinetului / Reprezentant" required class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 focus:ring-accent focus:border-accent transition duration-300 text-sm sm:text-base">
+                </div>
+                <div>
+                    <input type="email" id="email" name="email" placeholder="Adresa de E-mail" required class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 focus:ring-accent focus:border-accent transition duration-300 text-sm sm:text-base">
+                </div>
+                <div>
+                    <input type="tel" id="telefon" name="telefon" placeholder="Număr de Telefon" required class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 focus:ring-accent focus:border-accent transition duration-300 text-sm sm:text-base">
+                </div>
+                <div>
+                    <textarea id="mesaj" name="mesaj" rows="3 sm:rows="4" placeholder="Mesaj (Ex: Sunt interesat de modulul de programări pentru 5 medici)" class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 focus:ring-accent focus:border-accent transition duration-300 text-sm sm:text-base"></textarea>
+                </div>
+                <button type="submit" class="w-full px-6 py-3 text-white font-bold text-base sm:text-lg rounded-lg shadow-accent-light cta-button">
+                    Trimitere Solicitare
+                </button>
+                <p class="text-xs sm:text-sm text-gray-500 mt-4">Vă vom contacta în maxim 24 de ore.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- 7. FAQ Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-extrabold mb-4 text-gray-900">
+                    Întrebări <span class="text-accent">Frecvente</span>
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Răspunsuri la cele mai comune întrebări despre AIDA.
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Cât costă implementarea AIDA?</h3>
+                    <p class="text-gray-600">Costul de implementare începe de la 2.500€ pentru setup inițial, plus un abonament lunar de 299€ per cabinet. Include training-ul personalului și suport tehnic.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Este sigur să folosim AI pentru date medicale?</h3>
+                    <p class="text-gray-600">Absolut. AIDA respectă toate reglementările GDPR și ANMDM. Datele sunt criptate end-to-end și nu sunt stocate pe servere externe.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Cât timp durează implementarea?</h3>
+                    <p class="text-gray-600">Setup-ul complet durează 1-2 săptămâni, inclusiv integrarea cu sistemele existente și training-ul echipei medicale.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Funcționează AIDA în afara orelor de program?</h3>
+                    <p class="text-gray-600">Da! AIDA funcționează 24/7, preluând toate solicitările non-urgente în afara programului normal de lucru.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Ce se întâmplă cu urgențele medicale?</h3>
+                    <p class="text-gray-600">AIDA recunoaște cuvintele-cheie pentru urgențe și redirecționează imediat către operatori umani sau către serviciile de urgență.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6.5. Statistics Section -->
+    <section class="py-12 sm:py-16 bg-accent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
+                <div class="text-white">
+                    <div class="text-3xl sm:text-4xl font-extrabold mb-2">500+</div>
+                    <div class="text-sm sm:text-lg opacity-90">Cabinete Active</div>
+                </div>
+                <div class="text-white">
+                    <div class="text-3xl sm:text-4xl font-extrabold mb-2">1M+</div>
+                    <div class="text-sm sm:text-lg opacity-90">Interacțiuni Lunare</div>
+                </div>
+                <div class="text-white">
+                    <div class="text-3xl sm:text-4xl font-extrabold mb-2">99.5%</div>
+                    <div class="text-sm sm:text-lg opacity-90">Satisfacție Pacienți</div>
+                </div>
+                <div class="text-white">
+                    <div class="text-3xl sm:text-4xl font-extrabold mb-2">24/7</div>
+                    <div class="text-sm sm:text-lg opacity-90">Disponibilitate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-extrabold mb-4 text-gray-900">
+                    Ce Spun <span class="text-accent">Clienții Noștri</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Cabinetelor medicale care au implementat AIDA și au văzut rezultatele.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 text-xl">★★★★★</div>
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">
+                        "AIDA a revoluționat modul în care gestionăm programările. Pacienții sunt încântați de răspunsurile instant și noi am scăpat de 70% din apelurile repetitive."
+                    </p>
+                    <div class="font-semibold text-gray-900">Dr. Maria Popescu</div>
+                    <div class="text-sm text-gray-500">Cabinet Cardiologie București</div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 text-xl">★★★★★</div>
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">
+                        "Urgențele sunt filtrate perfect, iar noaptea dorm liniștit știind că AIDA gestionează totul. Recomand cu încredere!"
+                    </p>
+                    <div class="font-semibold text-gray-900">Dr. Andrei Ionescu</div>
+                    <div class="text-sm text-gray-500">Clinică Medicală Cluj</div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 text-xl">★★★★★</div>
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">
+                        "Implementarea a fost ușoară, iar ROI-ul s-a văzut din prima lună. Costurile operaționale au scăzut semnificativ."
+                    </p>
+                    <div class="font-semibold text-gray-900">Dr. Elena Vasilescu</div>
+                    <div class="text-sm text-gray-500">Policlinică Timișoara</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="text-white py-12" style="background: linear-gradient(315deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <img src="./AIDA-footer.svg" alt="AIDA Logo" class="h-8 w-auto mr-3 ml-[-1.5rem]">
+                        
+                    </div>
+                    <p class="text-gray-300 mb-4 max-w-md">
+                        Asistentul Medical AI care lucrează 24/7 pentru cabinetele medicale românești.
+                        Gestionăm programările, filtrăm urgențele și oferim suport instant prin WhatsApp.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-accent transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-accent transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-accent transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-accent transition duration-300">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-white">Link-uri Rapide</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-300 hover:text-white transition duration-300">Funcționalități</a></li>
+                        <li><a href="#pricing" class="text-gray-300 hover:text-white transition duration-300">Prețuri</a></li>
+                        <li><a href="#testimonials" class="text-gray-300 hover:text-white transition duration-300">Testimoniale</a></li>
+                        <li><a href="#faq" class="text-gray-300 hover:text-white transition duration-300">Întrebări Frecvente</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-white">Suport</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Centru de Ajutor</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Documentație</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Status Sistem</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Contact Suport</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Programări Demo</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Newsletter Signup -->
+            <div class="border-t border-gray-700 mt-8 pt-8">
+                <div class="max-w-md mx-auto text-center px-4">
+                    <h3 class="text-lg font-semibold mb-2 text-white">Rămâi la Curent</h3>
+                    <p class="text-gray-300 mb-4 text-sm sm:text-base">Primește ultimele noutăți despre AIDA și inovațiile în domeniul sănătății digitale.</p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="email" placeholder="Adresa ta de email" class="flex-1 px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-accent text-sm">
+                        <button class="bg-accent hover:bg-accent-dark text-white px-4 sm:px-6 py-2 rounded-lg transition duration-300 whitespace-nowrap text-sm sm:text-base">
+                            Abonează-te
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300 px-4">
+                <div class="mb-4 md:mb-0 text-center md:text-left">
+                    <p class="text-white text-sm">&copy; 2025 AIDA - Soluție oferită de SmartSentinels. Toate drepturile rezervate.</p>
+                </div>
+                <div class="flex flex-wrap gap-4 md:gap-6 justify-center md:justify-end text-xs sm:text-sm">
+                    <a href="#" class="text-gray-300 hover:text-white transition duration-300">Termeni și Condiții</a>
+                    <a href="#" class="text-gray-300 hover:text-white transition duration-300">Politica de Confidențialitate</a>
+                    <a href="#" class="text-gray-300 hover:text-white transition duration-300">Politica Cookies</a>
+                    <a href="#" class="text-gray-300 hover:text-white transition duration-300">RGPD</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL for Dashboard Demo -->
+    <div id="aidaDemoModal" class="modal">
+        <div class="modal-content max-h-[90vh] overflow-y-auto">
+            <span class="close-btn text-2xl sm:text-3xl text-black" onclick="document.getElementById('aidaDemoModal').style.display='none'">&times;</span>
+            <header class="bg-white shadow-lg rounded-t-xl border-b border-gray-200">
+                <div class="dashboard-container-modal flex flex-col md:flex-row justify-between items-start md:items-center py-4 space-y-4 md:space-y-0">
+                    <div class="flex items-center space-x-4 md:space-x-6">
+                        <img src="./AIDA.svg" alt="AIDA Logo" class="h-8 w-auto">
+                        <span class="text-gray-600 text-xs sm:text-sm border-l border-gray-400 pl-4 md:pl-6">
+                            Jurnal de Activitate AI (DEMO)
+                        </span>
+                    </div>
+                    <!-- Simplified controls for demo -->
+                    <div class="text-xs sm:text-sm text-gray-600 flex items-center space-x-2 md:space-x-4">
+                        <i class="fas fa-user-shield text-lg sm:text-xl icon-3d text-black"></i> Acces Cabinet Medical Speranța
+                    </div>
+                </div>
+            </header>
+
+            <main class="dashboard-container-modal p-4 sm:p-6">
+                <h1 class="text-lg sm:text-xl font-bold mt-2 mb-4 text-gray-900">Interacțiuni Preluate de Agentul AI</h1>
+                <p class="text-gray-600 mb-6 text-sm sm:text-base">
+                    Acest tablou de bord prezintă cum AIDA clasifică și procesează automat solicitările telefonice și WhatsApp.
+                </p>
+
+                <!-- Filters and Actions Bar -->
+                <div class="header-bg p-3 sm:p-4 rounded-t-xl flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-300 space-y-4 md:space-y-0">
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-start sm:items-center w-full md:w-auto">
+                        <select class="bg-white border border-gray-300 text-gray-800 p-2 rounded-lg text-sm shadow-sm w-full sm:w-auto">
+                            <option>Toate Categoriile</option>
+                        </select>
+                        <input type="text" placeholder="Caută..." class="bg-white border border-gray-300 text-gray-800 p-2 rounded-lg text-sm w-full sm:w-48 shadow-sm">
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-600 w-full md:w-auto text-center md:text-left">
+                        <span class="font-semibold text-gray-900">12</span> Interacțiuni Active
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white shadow-xl rounded-b-xl overflow-hidden mb-6 border border-gray-200 overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-300 text-sm">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 w-8 sm:w-10">#</th>
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 w-20 sm:w-28">Categorie</th>
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 w-24 sm:w-32">Canal</th>
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 w-28 sm:w-40">Pacient</th>
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700">Mesaj</th>
+                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 w-16 sm:w-24">Dată</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-300 text-gray-800">
+        
+                            <!-- DEMO ROW 1: Emergency -->
+                            <tr class="table-row-hover bg-white border-l-4 border-red-600">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><span class="tag tag-urgent">Urgență</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><i class="fas fa-phone-alt mr-2 text-accent icon-3d"></i> 0722 XXX 123</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Ioana Călinescu</td>
+                                <td class="px-6 py-4 text-sm text-red-700 font-semibold">
+                                    "Am dureri mari în piept de o oră." - Redirecționat instant către linia umană/SMURD.
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Azi, 09:35</td>
+                            </tr>
+                            
+                            <!-- DEMO ROW 2: Appointment -->
+                            <tr class="table-row-hover">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><span class="tag tag-programare">Programare</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><i class="fab fa-whatsapp mr-2 text-black icon-3d"></i> 0740 XXX 456</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Mihai Ionescu</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    Rezervat: Consultație Dr. Popescu, Cardiologie. 
+                                    <span class="text-indigo-700">Data: 15 Oct, ora 14:00.</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Azi, 09:01</td>
+                            </tr>
+
+                            <!-- DEMO ROW 3: Cancellation -->
+                            <tr class="table-row-hover">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><span class="tag tag-anulare">Anulare</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><i class="fas fa-phone-alt mr-2 text-accent icon-3d"></i> 0767 XXX 789</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Andreea Popescu</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    Anulat: Pacientul a confirmat anularea. Slotul a fost eliberat automat. (Inițial Dr. Radu, 14 Oct, 10:30).
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ieri, 18:45</td>
+                            </tr>
+
+                            <!-- DEMO ROW 4: Recipe -->
+                            <tr class="table-row-hover">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><span class="tag tag-reteta">Rețetă</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><i class="fab fa-whatsapp mr-2 text-black icon-3d"></i> 0725 XXX 012</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Cristian Dumitru</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    Solicitare Rețetă: Pacient stabil. 
+                                    <span class="text-amber-700">Medicație solicitată: Ibuprofen 600.</span> De revizuit de către asistent.
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ieri, 16:10</td>
+                            </tr>
+
+                            <!-- DEMO ROW 5: Message/FAQ -->
+                            <tr class="table-row-hover">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><span class="tag tag-mesaj">Mesaj/Info</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><i class="fas fa-phone-alt mr-2 text-accent icon-3d"></i> 0731 XXX 345</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Elena Vasilescu</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    Răspuns Automat: AIDA a oferit programul exact și adresa cabinetului. Solicitare închisă.
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ieri, 10:05</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Simple script to close the modal on outside click
+        var modal = document.getElementById('aidaDemoModal');
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
