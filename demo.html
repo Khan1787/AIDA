@@ -8,27 +8,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Culori și Fonturi */
         :root { --color-accent: #000000; --color-primary: #1f2937; --color-background: #ffffff; }
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: var(--color-primary); }
+        
+        /* Layout */
         .chat-container { max-width: 600px; margin: 40px auto; background-color: var(--color-background); border-radius: 12px; box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .chat-box { height: 400px; /* Înălțime fixă pentru scroll */ }
+        
+        /* Bule de chat */
         .chat-bubble { padding: 10px 15px; border-radius: 18px; margin-bottom: 8px; max-width: 85%; }
-        .user-bubble { background-color: #dbeafe; margin-left: auto; text-align: right; }
-        .aida-bubble { background-color: #f3f4f6; margin-right: auto; text-align: left; }
+        .user-bubble { 
+            background-color: #dbeafe; /* Albastru deschis */
+            margin-left: auto; 
+            text-align: right; 
+        }
+        .aida-bubble { 
+            background-color: #f3f4f6; /* Gri foarte deschis */
+            margin-right: auto; 
+            text-align: left; 
+        }
     </style>
 </head>
 <body>
 
 <div class="chat-container p-6">
     <div class="text-center mb-6">
-        <img src="./AIDA.svg" alt="AIDA Logo" class="h-10 w-auto mx-auto mb-2">
         <h1 class="text-2xl font-bold text-gray-900">AIDA Demo - Asistentul Tău AI</h1>
         <p class="text-gray-500 text-sm">Pune o întrebare sau solicită o programare pentru a vedea cum funcționează AIDA. Scrie „urgență” pentru a testa filtrarea.</p>
     </div>
-    <div id="chat-box" class="h-96 overflow-y-auto mb-6 p-4 border-b border-gray-200">
-        </div>
+    <!-- Chat Box unde sunt afișate mesajele -->
+    <div id="chat-box" class="chat-box overflow-y-auto mb-6 p-4 border-b border-gray-200">
+    </div>
+    
+    <!-- Input și Buton -->
     <div class="flex items-center space-x-2">
-        <input type="text" id="user-input" placeholder="Scrie mesajul tău..." class="flex-1 px-4 py-3 border border-gray-300 rounded-full text-gray-800 focus:ring-accent focus:border-accent">
-        <button id="send-button" class="bg-black text-white px-6 py-3 rounded-full cta-button">
+        <input type="text" id="user-input" placeholder="Scrie mesajul tău..." 
+               class="flex-1 px-4 py-3 border border-gray-300 rounded-full text-gray-800 focus:ring-accent focus:border-accent">
+        <button id="send-button" class="bg-black text-white px-6 py-3 rounded-full cta-button hover:bg-gray-800 transition duration-150">
             <i class="fas fa-paper-plane"></i>
         </button>
     </div>
@@ -39,59 +56,119 @@
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
+    /**
+     * Adaugă un mesaj în fereastra de chat.
+     * @param {string} sender - 'user' sau 'aida'.
+     * @param {string} message - Conținutul mesajului.
+     * @param {boolean} isUrgent - Dacă este True, aplică stilul de alertă/urgență.
+     * @returns {HTMLElement} Elementul bulă nou creat.
+     */
     function addMessage(sender, message, isUrgent = false) {
         const bubble = document.createElement('div');
-        bubble.classList.add('chat-bubble');
-        if (sender === 'user') {
-            bubble.classList.add('user-bubble');
-            bubble.textContent = message;
-        } else {
-            bubble.classList.add('aida-bubble');
+        bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'aida-bubble');
+        
+        if (sender === 'aida') {
+            // Dacă este mesaj de la AIDA, afișăm eticheta AIDA: și aplicăm stilul de urgență dacă este necesar
             bubble.innerHTML = `<strong>AIDA:</strong> ${message}`;
             if (isUrgent) {
-                bubble.style.backgroundColor = '#fecaca';
-                bubble.style.color = '#dc2626';
+                // Stil pentru urgență/alertă
+                bubble.style.backgroundColor = '#fecaca'; // Red foarte deschis
+                bubble.style.color = '#dc2626';      // Text roșu închis
             }
+        } else {
+            // Mesaj de la utilizator
+            bubble.textContent = message;
         }
+
         chatBox.appendChild(bubble);
+        // Derulează la finalul chat-ului
         chatBox.scrollTop = chatBox.scrollHeight;
+        return bubble; 
     }
 
-    async function getAidaResponse(message) {
-        // Simulăm o întârziere pentru a arăta că AI-ul "gândește"
-        addMessage('aida', 'Te rog să aștepți, procesez solicitarea...', false);
+    /**
+     * Trimite mesajul către serverul Flask și gestionează răspunsul/erorile.
+     * Include console.log-uri pentru depanare.
+     */
+async function getAidaResponse(message) {
+        console.log(`[AIDA] Trimit mesajul către server: ${message}`);
+        
+        // 1. Adaugă mesajul de așteptare și păstrează referința
+        const loadingMessage = addMessage('aida', 'Te rog să aștepți, procesez solicitarea...', false);
 
-        const response = await fetch('http://localhost:3000/ask-aida', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ message: message })
-        });
+        try {
+            const response = await fetch('http://127.0.0.1:3000/ask-aida', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
 
-        chatBox.lastChild.remove(); // Elimină mesajul de așteptare
+            console.log(`[AIDA] Răspuns primit cu status: ${response.status}`);
 
-        const data = await response.json();
-        return data; // Returnează un obiect cu mesaj și flag pentru urgență
+            // 2. Verifică statusul HTTP
+            if (!response.ok) {
+                // Dacă nu e OK, citim textul pentru a vedea eroarea Flask
+                const errorBody = await response.text();
+                throw new Error(`HTTP error! Status: ${response.status}. Body: ${errorBody.substring(0, 100)}...`);
+            }
+            
+            // 3. Parsare JSON direct
+            const data = await response.json(); 
+            console.log("[AIDA] Date JSON parsate cu succes (Final):", data);
+
+            // 4. Elimină mesajul de așteptare
+            if (loadingMessage) {
+                loadingMessage.remove(); 
+            }
+            
+            return data; 
+
+        } catch (error) {
+            console.error("[AIDA EROARE FATALA] Fetch sau procesare JSON eșuată:", error);
+            
+            // 5. Elimină mesajul de așteptare
+            if (loadingMessage) {
+                loadingMessage.remove(); 
+            }
+            // Returnează un răspuns de eroare
+            return { 
+                message: `Eroare la conectarea cu serverul AI: ${error.message || 'Problema de rețea.'}. Verificați terminalul Flask.`, 
+                isUrgent: true 
+            };
+        }
     }
 
+    // Funcție principală pentru trimiterea mesajelor
     sendButton.addEventListener('click', async () => {
         const message = userInput.value.trim();
+        
         if (message) {
+            // 1. Adaugă mesajul utilizatorului
             addMessage('user', message);
-            const { message: aidaResponse, isUrgent } = await getAidaResponse(message);
+            userInput.value = ''; // Golește input-ul
+            
+            // 2. Așteaptă răspunsul de la AIDA
+            const data = await getAidaResponse(message);
+            
+            // 3. Extrage mesajul și flag-ul de urgență din datele primite
+            const aidaResponse = data && data.message ? data.message : "Eroare: Răspunsul AI este gol sau formatul este incorect.";
+            const isUrgent = data && data.isUrgent ? data.isUrgent : false;
+
+            // 4. Adaugă răspunsul final de la AIDA
             addMessage('aida', aidaResponse, isUrgent);
-            userInput.value = '';
         }
     });
 
+    // Permite trimiterea mesajului cu tasta Enter
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             sendButton.click();
         }
     });
 
-    // Mesaj inițial de la AIDA
+    // Mesaj inițial de la AIDA la încărcarea paginii
     window.onload = () => {
         addMessage('aida', 'Salut! Sunt AIDA, asistentul tău medical AI. Cu ce te pot ajuta astăzi?');
     };
